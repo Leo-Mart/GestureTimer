@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -21,7 +24,28 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) GetFilePaths() {
+	imagePaths := []string{}
+	directory, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})
+	if err != nil {
+		runtime.LogError(a.ctx, err.Error())
+		return
+	}
+	// TODO: Walk through subdirectories and get all files?
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		runtime.LogError(a.ctx, err.Error())
+	}
+
+	for _, file := range files {
+		ext := filepath.Ext(file.Name())
+		if ext == ".jpg" || ext == ".png" {
+			imageFilePath := filepath.Join(directory, file.Name())
+			imagePaths = append(imagePaths, imageFilePath)
+		}
+	}
+
+	for _, filePath := range imagePaths {
+		runtime.LogInfo(a.ctx, filePath)
+	}
 }

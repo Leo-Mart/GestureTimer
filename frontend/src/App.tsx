@@ -1,35 +1,35 @@
-declare module "react" {
-  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    webkitdirectory?: string;
-  }
-}
+import { useState } from "react";
+import { GetFilePaths } from "../wailsjs/go/main/App.js";
 
 function App() {
+  const [sessionType, setSessionType] = useState("standard");
+  const [timer, setTimer] = useState(30);
+
+  const handleSessionChoice = (choice: string) => {
+    setSessionType(choice);
+    console.log(sessionType);
+  };
+
+  const handleTimerChoice = (choice: number) => {
+    setTimer(choice);
+    console.log(timer);
+  };
+
+  function handleClick() {
+    GetFilePaths();
+  }
   return (
     <>
       <form className="bg-[#1E2326] min-h-screen grid grid-cols-6">
-        {/* the file selector and the status of the files  */}
-        <div className="border-3 border-red-700 col-span-4 col-start-2">
-          <div>
-            <input
-              type="file"
-              id="files"
-              name="files"
-              webkitdirectory=""
-              multiple
-            ></input>
-            <label htmlFor="files">Select your reference images</label>
-          </div>
-          <div>
-            <p>
-              The status of the imported files go here, like how many files and
-              so on
-            </p>
-          </div>
+        <div className="col-start-2 col-span-4 border-3 border-teal-800">
+          <button
+            className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]"
+            onClick={handleClick}
+          >
+            Open files
+          </button>
         </div>
 
-        {/* here we have option for the session type, couple of predetermined option and maybe a custom option? */}
-        {/* this will determine timers mostly, and class mode for instance is a predetermined mode of like 5 images on 1 min 5 on 2 and then 2 on 10 or something like that  */}
         <div className="col-start-2 col-span-4 border-3 border-green-700">
           <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
             Select session type
@@ -43,6 +43,8 @@ function App() {
                   id="standard"
                   name="session"
                   value="standard"
+                  checked={sessionType === "standard"}
+                  onChange={() => handleSessionChoice("standard")}
                   required
                 />
                 <label
@@ -59,6 +61,8 @@ function App() {
                   id="class"
                   name="session"
                   value="class"
+                  checked={sessionType === "class"}
+                  onChange={() => handleSessionChoice("class")}
                   required
                 />
                 <label
@@ -72,7 +76,6 @@ function App() {
           </fieldset>
         </div>
 
-        {/* timer settings */}
         <div className="col-start-2 col-span-4 border-3 border-red-700">
           <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
             Choose time
@@ -86,6 +89,8 @@ function App() {
                   name="timer"
                   value="30"
                   className="hidden peer"
+                  checked={timer === 30}
+                  onChange={() => handleTimerChoice(30)}
                   required
                 />
                 <label
@@ -102,6 +107,8 @@ function App() {
                   name="timer"
                   value="60"
                   className="hidden peer"
+                  checked={timer === 60}
+                  onChange={() => handleTimerChoice(60)}
                   required
                 />
                 <label
@@ -119,6 +126,8 @@ function App() {
                   name="timer"
                   value="120"
                   className="hidden peer"
+                  checked={timer === 120}
+                  onChange={() => handleTimerChoice(120)}
                   required
                 />
                 <label
@@ -136,6 +145,8 @@ function App() {
                   name="timer"
                   value="300"
                   className="hidden peer"
+                  checked={timer === 300}
+                  onChange={() => handleTimerChoice(300)}
                   required
                 />
                 <label
@@ -153,6 +164,8 @@ function App() {
                   name="timer"
                   value="600"
                   className="hidden peer"
+                  checked={timer === 600}
+                  onChange={() => handleTimerChoice(600)}
                   required
                 />
                 <label
@@ -183,8 +196,10 @@ function App() {
           </fieldset>
         </div>
         {/* the start button */}
-        <div>
-          <button className="border-r-fuchsia-800">Start!</button>
+        <div className="col-start-2 col-span-4">
+          <button className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]">
+            Start!
+          </button>
         </div>
       </form>
     </>
