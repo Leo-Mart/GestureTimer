@@ -2,22 +2,38 @@ import { useState } from "react";
 import { GetFilePaths } from "../wailsjs/go/main/App.js";
 
 function App() {
+  const [isChecked, setIsChecked] = useState(false);
   const [sessionType, setSessionType] = useState("standard");
   const [timer, setTimer] = useState(30);
 
   const handleSessionChoice = (choice: string) => {
+    if (isChecked) {
+      setIsChecked(false);
+    }
     setSessionType(choice);
-    console.log(sessionType);
   };
 
   const handleTimerChoice = (choice: number) => {
+    if (isChecked) {
+      setIsChecked(false);
+    }
     setTimer(choice);
-    console.log(timer);
   };
 
-  function handleClick() {
+  const handleCheckedCustomTimer = () => {
+    setTimer(0);
+    setIsChecked(true);
+  };
+
+  const handleCustomTimerInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setTimer(+e.target.value);
+  };
+
+  const handleClick = () => {
     GetFilePaths();
-  }
+  };
   return (
     <>
       <form className="bg-[#1E2326] min-h-screen grid grid-cols-6">
@@ -178,11 +194,13 @@ function App() {
 
               <li>
                 <input
-                  type="radio"
+                  type="checkbox"
                   id="timer-custom"
                   name="timer"
                   value="custom"
                   className="hidden peer"
+                  checked={isChecked}
+                  onChange={() => handleCheckedCustomTimer()}
                   required
                 />
                 <label
@@ -191,6 +209,31 @@ function App() {
                 >
                   Custom time
                 </label>
+                {isChecked && (
+                  <div>
+                    <label htmlFor="custom-timer-input">
+                      Enter time in seconds:
+                      <input
+                        type="number"
+                        id="custom-timer-input"
+                        name="custom-timer"
+                        value={timer}
+                        onChange={handleCustomTimerInputChange}
+                        placeholder="Custom duration"
+                        className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
+                      />
+                    </label>
+                    <label htmlFor="interval" className="block mb-2.5">
+                      <select
+                        id="interval"
+                        className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg shadow-xs"
+                      >
+                        <option value="seconds">Seconds</option>
+                        <option value="minutes">Minutes</option>
+                      </select>
+                    </label>
+                  </div>
+                )}
               </li>
             </ul>
           </fieldset>

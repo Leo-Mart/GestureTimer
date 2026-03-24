@@ -1,19 +1,25 @@
-# README
+# GestureTimer
 
-## About
+GestureTimer is an app for practicing gesture drawing using local reference images.
 
-This is the official Wails React-TS template.
+## Motivation
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+While learning to draw, gesture drawing is an important step in the overall process, the idea is to try to capture the energy or flow of a pose in a set timer.
+There are numerous online tools available for this type of practice but I specifically wanted to use images on my local machine to practice with. This allows me to control a bit more what type of images I get, say for practicing something specific, while also using all the images I've collected over the years.
+Thus, this app was born. This app will allow you to use local images as reference for your gesture drawing practice while giving full control over timers and other settings.
 
-## Live Development
+## Quick Start
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+Using the app is quite simple, all you need to do is clone the repo and then run wails build which will build the app into an executable, then it is just a matter of starting that executable.
 
-## Building
+## Usage
 
-To build a redistributable, production mode package, use `wails build`.
+A small gif/video and some general guidance of how to use the app goes here.
+
+## Technologies
+
+The app was built using [Wails](https://wails.io/) which lets me build a desktop app using Go and a frontend framework of my choice, in this case React.
+
+## Contributing
+
+If you'd like to contribute, please fork the repo and open a pull request.
