@@ -5,3 +5,11 @@
 export function GetFilePaths() {
   return window['go']['main']['App']['GetFilePaths']();
 }
+
+export function ReadImageToBase64(arg1) {
+  return window['go']['main']['App']['ReadImageToBase64'](arg1);
+}
+
+export function ReadImages() {
+  return window['go']['main']['App']['ReadImages']();
+}

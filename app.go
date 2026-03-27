@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"os"
 	"path/filepath"
 
@@ -24,12 +25,12 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) GetFilePaths() {
+func (a *App) GetFilePaths() []string {
 	imagePaths := []string{}
 	directory, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})
 	if err != nil {
 		runtime.LogError(a.ctx, err.Error())
-		return
+		return []string{}
 	}
 	// TODO: Walk through subdirectories and get all files?
 	files, err := os.ReadDir(directory)
@@ -45,7 +46,43 @@ func (a *App) GetFilePaths() {
 		}
 	}
 
-	for _, filePath := range imagePaths {
-		runtime.LogInfo(a.ctx, filePath)
+	return imagePaths
+}
+
+func (a *App) ReadImages() []string {
+	base64Images := []string{}
+	directory, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})
+	if err != nil {
+		runtime.LogError(a.ctx, err.Error())
+		return []string{}
 	}
+	// TODO: Walk through subdirectories and get all files?
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		runtime.LogError(a.ctx, err.Error())
+	}
+
+	for _, file := range files {
+		ext := filepath.Ext(file.Name())
+		if ext == ".jpg" || ext == ".png" {
+			imageFilePath := filepath.Join(directory, file.Name())
+			data, err := os.ReadFile(imageFilePath)
+			if err != nil {
+				runtime.LogError(a.ctx, err.Error())
+				return []string{}
+			}
+			base64Images = append(base64Images, base64.StdEncoding.EncodeToString(data))
+		}
+	}
+
+	return base64Images
+}
+
+func (a *App) ReadImageToBase64(imagePath string) string {
+	data, err := os.ReadFile(imagePath)
+	if err != nil {
+		runtime.LogError(a.ctx, "Error reading image")
+	}
+
+	return base64.StdEncoding.EncodeToString(data)
 }

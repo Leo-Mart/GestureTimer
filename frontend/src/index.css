@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+@theme {
+  --color-everforest-bg-dim: #1e2326;
+  --color-everforest-fg: #d3c6aa;
+  --color-everforest-red: #e67e80;
+  --color-everforest-green: #a7c080;
+}
