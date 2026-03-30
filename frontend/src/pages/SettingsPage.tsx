@@ -206,7 +206,7 @@ function SettingsPage() {
                 <input
                   type="checkbox"
                   id="timer-custom"
-                  name="timer"
+                  name="custom-timer"
                   value="custom"
                   className="hidden peer"
                   checked={isChecked}
