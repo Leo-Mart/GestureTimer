@@ -35,7 +35,6 @@ function SettingsPage() {
 
   const handleSelectFoldersClick = () => {
     GetFilePaths().then((paths) => setImagePaths(paths));
-    // ReadImages().then((base64Images) => setImages(base64Images));
   };
 
   return (
@@ -251,7 +250,14 @@ function SettingsPage() {
         </div>
         {/* the start button */}
         <div className="col-start-2 col-span-4">
-          <Link to="/drawing" state={{ from: imagePaths }}>
+          <Link
+            to="/drawing"
+            state={{
+              imagePaths: imagePaths,
+              timerSetting: timer,
+              sessionType: sessionType,
+            }}
+          >
             <button className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]">
               Start!
             </button>

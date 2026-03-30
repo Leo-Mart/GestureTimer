@@ -4,25 +4,45 @@ import { ReadImageToBase64 } from "../../wailsjs/go/main/App.js";
 
 function DrawingPage() {
   const location = useLocation();
-  const { from } = location.state;
+  const { imagePaths, sessionType, timerSetting } = location.state;
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [time, setTime] = useState<number>(timerSetting * 1000);
 
   useEffect(() => {
-    const imagePath = from[0];
+    const imagePath = imagePaths[0];
     ReadImageToBase64(imagePath).then((data) => {
       setCurrentImage(data);
     });
-  }, [from]);
+
+    const countDown = () => {
+      setTime((prevTime) => {
+        if (prevTime === 0) {
+          clearInterval(interval);
+          return 0;
+        } else return prevTime - 1000;
+      });
+    };
+
+    const interval = setInterval(countDown, 1000);
+    return () => clearInterval(interval);
+  }, [imagePaths]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor((time / 1000 / 60) % 60);
+    const seconds = Math.floor((time / 1000) % 60);
+
+    return `${minutes.toString()}:${seconds.toString()}`;
+  };
 
   const handleNextImageClick = () => {
-    const imagePath = from[1];
+    const imagePath = imagePaths[1];
     ReadImageToBase64(imagePath).then((data) => {
       setCurrentImage(data);
     });
   };
 
   const handlePreviousImageClick = () => {
-    const imagePath = from[0];
+    const imagePath = imagePaths[0];
     ReadImageToBase64(imagePath).then((data) => {
       setCurrentImage(data);
     });
@@ -41,6 +61,8 @@ function DrawingPage() {
           />
           <div className="absolute top-0 left-0">
             <Link to={"/"}>Back to menu</Link>
+            <p>Current session type: ${sessionType}</p>
+            <p>Timer: {formatTime(time)}</p>
             <button
               className="bg-everforest-green text-everforest-fg border rounded-2xl hover:cursor-pointer"
               onClick={handleNextImageClick}

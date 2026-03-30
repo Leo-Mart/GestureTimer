@@ -2,7 +2,30 @@
 
 @theme {
   --color-everforest-bg-dim: #1e2326;
+  --color-everforest-bg-0: #272e33;
+  --color-everforest-bg-1: #2e383c;
+  --color-everforest-bg-2: #374145;
+  --color-everforest-bg-3: #414b50;
+  --color-everforest-bg-4: #495156;
+  --color-everforest-bg-5: #4f5b58;
+  --color-everforest-bg-red: #493b40;
+  --color-everforest-bg-yellow: #45443c;
+  --color-everforest-bg-green: #3c4841;
+  --color-everforest-bg-blue: #384b55;
+  --color-everforest-bg-purple: #463f48;
+  --color-everforest-bg-visual: #4c3743;
   --color-everforest-fg: #d3c6aa;
   --color-everforest-red: #e67e80;
+  --color-everforest-yellow: #dbbc7f;
   --color-everforest-green: #a7c080;
+  --color-everforet-blue: #7fbbb3;
+  --color-everforest-purple: #d699b6;
+  --color-everforest-aqua: #83c092;
+  --color-everforest-orange: #e69875;
+  --color-everforest-statusline-1: #a7c080;
+  --color-everforest-statusline-2: #d3c6aa;
+  --color-everforest-statusline-3: #e67e80;
+  --color-everforest-grey-0: #7a8478;
+  --color-everforest-grey-1: #859289;
+  --color-everforest-grey-2: #9da9a0;
 }
