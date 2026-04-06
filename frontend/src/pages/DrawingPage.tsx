@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ReadImageToBase64 } from "../../wailsjs/go/main/App.js";
 import {
@@ -8,25 +8,28 @@ import {
   FaPlay,
   FaPause,
 } from "react-icons/fa6";
+import Timer from "../components/Timer.tsx";
 
 function DrawingPage() {
   const location = useLocation();
   const { imagePaths, sessionType, timerSetting } = location.state;
+
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const [time, setTime] = useState<number>(timerSetting * 1000);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const currentImageIndex = useRef(0);
+  const [timerPaused, setTimerPaused] = useState(false);
+  const [timerExpired, setTimerExpired] = useState(false);
 
   const handleNextImageClick = () => {
-    let currentIndex = currentImageIndex;
+    let newIndex = currentImageIndex.current;
 
-    currentIndex++;
+    newIndex++;
 
-    if (currentIndex > imagePaths.length - 1) {
-      currentIndex = 0;
+    if (newIndex > imagePaths.length - 1) {
+      newIndex = 0;
     }
 
-    const imagePath = imagePaths[currentIndex];
-    setCurrentImageIndex(currentIndex);
+    const imagePath = imagePaths[newIndex];
+    currentImageIndex.current = newIndex;
 
     ReadImageToBase64(imagePath).then((data) => {
       setCurrentImage(data);
@@ -34,47 +37,48 @@ function DrawingPage() {
   };
 
   const handlePreviousImageClick = () => {
-    let currentIndex = currentImageIndex;
+    let newIndex = currentImageIndex.current;
 
-    currentIndex--;
+    newIndex--;
 
-    if (currentIndex < 0) {
-      currentIndex = imagePaths.length - 1;
+    if (newIndex < 0) {
+      newIndex = imagePaths.length - 1;
     }
 
-    const imagePath = imagePaths[currentIndex];
-    setCurrentImageIndex(currentIndex);
+    const imagePath = imagePaths[newIndex];
+    currentImageIndex.current = newIndex;
 
     ReadImageToBase64(imagePath).then((data) => {
       setCurrentImage(data);
     });
+  };
+  const handlePauseTimer = () => {
+    setTimerPaused(true);
+  };
+
+  const handleResumeTimer = () => {
+    setTimerPaused(false);
   };
 
   useEffect(() => {
-    const imagePath = imagePaths[0];
-    ReadImageToBase64(imagePath).then((data) => {
+    if (timerExpired) {
+      let newIndex = currentImageIndex.current;
+
+      newIndex++;
+
+      if (newIndex > imagePaths.length - 1) {
+        newIndex = 0;
+      }
+      const newImagePath = imagePaths[newIndex];
+      currentImageIndex.current = newIndex;
+      ReadImageToBase64(imagePaths[newImagePath]).then((data) => {
+        setCurrentImage(data);
+      });
+    }
+    ReadImageToBase64(imagePaths[currentImageIndex.current]).then((data) => {
       setCurrentImage(data);
     });
-
-    const countDown = () => {
-      setTime((prevTime) => {
-        if (prevTime === 0) {
-          clearInterval(interval);
-          return 0;
-        } else return prevTime - 1000;
-      });
-    };
-
-    const interval = setInterval(countDown, 1000);
-    return () => clearInterval(interval);
-  }, [imagePaths]);
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor((time / 1000 / 60) % 60);
-    const seconds = Math.floor((time / 1000) % 60);
-
-    return `${minutes.toString()}:${seconds.toString()}`;
-  };
+  }, [timerExpired, imagePaths]);
 
   return (
     <>
@@ -99,7 +103,11 @@ function DrawingPage() {
               <FaAnglesLeft />
             </button>
             <button className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer">
-              <FaPlay /> <FaPause />
+              {timerPaused ? (
+                <FaPlay onClick={handleResumeTimer} />
+              ) : (
+                <FaPause onClick={handlePauseTimer} />
+              )}
             </button>
             <button
               className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer "
@@ -110,7 +118,12 @@ function DrawingPage() {
           </div>
           <div className="absolute top-0 right-0">
             <p>Current session type: ${sessionType}</p>
-            <p>Timer: {formatTime(time)}</p>
+            <Timer
+              timerSetting={timerSetting}
+              timerPaused={timerPaused}
+              timeExpired={timerExpired}
+              setTimeExpired={setTimerExpired}
+            />
           </div>
         </div>
       </div>
