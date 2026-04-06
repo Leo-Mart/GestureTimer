@@ -69,16 +69,15 @@ function DrawingPage() {
       if (newIndex > imagePaths.length - 1) {
         newIndex = 0;
       }
-      const newImagePath = imagePaths[newIndex];
+
       currentImageIndex.current = newIndex;
-      ReadImageToBase64(imagePaths[newImagePath]).then((data) => {
-        setCurrentImage(data);
-      });
+      setTimerExpired(false);
     }
+
     ReadImageToBase64(imagePaths[currentImageIndex.current]).then((data) => {
       setCurrentImage(data);
     });
-  }, [timerExpired, imagePaths]);
+  }, [imagePaths, timerExpired]);
 
   return (
     <>
