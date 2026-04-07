@@ -3,16 +3,17 @@ import { useEffect, useState } from "react";
 function Timer({
   timerSetting,
   timerPaused,
-  timeExpired,
+  timerReset,
+  setTimerReset,
   setTimeExpired,
 }: {
   timerSetting: number;
   timerPaused: boolean;
-  timeExpired: boolean;
+  timerReset: boolean;
+  setTimerReset: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeExpired: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [time, setTime] = useState<number>(timerSetting * 1000);
-  const [expired, setExpired] = useState(timeExpired);
 
   useEffect(() => {
     const timer = () => {
@@ -20,16 +21,16 @@ function Timer({
         if (timerPaused) {
           clearInterval(interval);
           return prevTime;
-        } else if (expired) {
+        } else if (timerReset) {
+          clearInterval(interval);
           prevTime = 0;
-          setExpired(false);
-          setTimeExpired(false);
+          setTimerReset(false);
           return timerSetting * 1000;
         } else if (prevTime === 0) {
-          setExpired(true);
           setTimeExpired(true);
           clearInterval(interval);
-          return 0;
+          prevTime = 0;
+          return timerSetting * 1000;
         } else {
           return prevTime - 1000;
         }
