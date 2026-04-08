@@ -18,9 +18,10 @@ function DrawingPage() {
   const currentImageIndex = useRef(0);
   const [timerPaused, setTimerPaused] = useState(false);
   const [timerExpired, setTimerExpired] = useState(false);
-  const [timerReset, setTimerReset] = useState(false);
+  const [resetTimer, setResetTimer] = useState(false);
 
   const handleNextImageClick = () => {
+    setResetTimer(true);
     let newIndex = currentImageIndex.current;
 
     newIndex++;
@@ -29,17 +30,15 @@ function DrawingPage() {
       newIndex = 0;
     }
 
-    const imagePath = imagePaths[newIndex];
     currentImageIndex.current = newIndex;
 
-    ReadImageToBase64(imagePath).then((data) => {
+    ReadImageToBase64(imagePaths[currentImageIndex.current]).then((data) => {
       setCurrentImage(data);
     });
-
-    setTimerReset(true);
   };
 
   const handlePreviousImageClick = () => {
+    setResetTimer(true);
     let newIndex = currentImageIndex.current;
 
     newIndex--;
@@ -48,14 +47,11 @@ function DrawingPage() {
       newIndex = imagePaths.length - 1;
     }
 
-    const imagePath = imagePaths[newIndex];
     currentImageIndex.current = newIndex;
 
-    ReadImageToBase64(imagePath).then((data) => {
+    ReadImageToBase64(imagePaths[currentImageIndex.current]).then((data) => {
       setCurrentImage(data);
     });
-
-    setTimerReset(true);
   };
 
   const handlePauseTimer = () => {
@@ -126,9 +122,9 @@ function DrawingPage() {
             <Timer
               timerSetting={timerSetting}
               timerPaused={timerPaused}
-              timerReset={timerReset}
-              setTimerReset={setTimerReset}
+              resetTimer={resetTimer}
               setTimeExpired={setTimerExpired}
+              setResetTimer={setResetTimer}
             />
           </div>
         </div>

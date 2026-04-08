@@ -1,40 +1,40 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Timer({
   timerSetting,
   timerPaused,
-  timerReset,
-  setTimerReset,
+  resetTimer,
+  setResetTimer,
   setTimeExpired,
 }: {
   timerSetting: number;
   timerPaused: boolean;
-  timerReset: boolean;
-  setTimerReset: React.Dispatch<React.SetStateAction<boolean>>;
+  resetTimer: boolean;
+  setResetTimer: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeExpired: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [time, setTime] = useState<number>(timerSetting * 1000);
 
   useEffect(() => {
     const timer = () => {
-      setTime((prevTime) => {
-        if (timerPaused) {
-          clearInterval(interval);
-          return prevTime;
-        } else if (timerReset) {
-          clearInterval(interval);
-          prevTime = 0;
-          setTimerReset(false);
-          return timerSetting * 1000;
-        } else if (prevTime === 0) {
-          setTimeExpired(true);
-          clearInterval(interval);
-          prevTime = 0;
-          return timerSetting * 1000;
-        } else {
-          return prevTime - 1000;
-        }
-      });
+      if (time === 0) {
+        clearInterval(interval);
+        setTimeExpired(true);
+        setTime(1000 + timerSetting * 1000);
+      }
+
+      if (timerPaused) {
+        clearInterval(interval);
+      }
+
+      if (resetTimer) {
+        clearInterval(interval);
+        setTime(timerSetting * 1000);
+        setResetTimer(false);
+      }
+      if (!resetTimer && !timerPaused) {
+        setTime((prevTime) => prevTime - 1000);
+      }
     };
 
     const interval = setInterval(timer, 1000);

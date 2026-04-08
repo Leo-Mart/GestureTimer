@@ -226,7 +226,7 @@ function SettingsPage() {
                       <input
                         type="number"
                         id="custom-timer-input"
-                        name="custom-timer"
+                        name="custom-timer-input"
                         value={timer}
                         onChange={handleCustomTimerInputChange}
                         placeholder="Custom duration"
@@ -258,7 +258,10 @@ function SettingsPage() {
               sessionType: sessionType,
             }}
           >
-            <button className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]">
+            <button
+              type="button"
+              className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]"
+            >
               Start!
             </button>
           </Link>
