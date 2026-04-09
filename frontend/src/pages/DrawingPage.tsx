@@ -12,7 +12,7 @@ import Timer from "../components/Timer.tsx";
 
 function DrawingPage() {
   const location = useLocation();
-  const { imagePaths, sessionType, timerSetting } = location.state;
+  const { imagePaths, timerSetting } = location.state;
 
   const [currentImage, setCurrentImage] = useState<string | null>(null);
   const currentImageIndex = useRef(0);
@@ -90,35 +90,36 @@ function DrawingPage() {
             className="overflow-hidden max-h-screen"
           />
           {/* Menu bar */}
-          <div className="absolute bottom-5 left-[1/2] bg-everforest-bg-5 flex p-1">
-            <Link
-              to={"/"}
-              className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer"
-            >
-              <FaHouse />
-            </Link>
-            <button
-              className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer"
-              onClick={handlePreviousImageClick}
-            >
-              <FaAnglesLeft />
-            </button>
-            <button className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer">
-              {timerPaused ? (
-                <FaPlay onClick={handleResumeTimer} />
-              ) : (
-                <FaPause onClick={handlePauseTimer} />
-              )}
-            </button>
-            <button
-              className="bg-everforest-bg-0 text-everforest-fg border hover:cursor-pointer "
-              onClick={handleNextImageClick}
-            >
-              <FaAnglesRight />
-            </button>
+          <div className="absolute bottom-0 w-full h-10 bg-everforest-bg-dim/35 flex justify-center p-1">
+            <div className="flex justify-around items-center w-30">
+              <Link
+                to={"/"}
+                className="text-everforest-fg hover:cursor-pointer hover:text-everforest-bg-green"
+              >
+                <FaHouse />
+              </Link>
+              <button
+                className="text-everforest-fg hover:cursor-pointer hover:text-everforest-bg-green"
+                onClick={handlePreviousImageClick}
+              >
+                <FaAnglesLeft />
+              </button>
+              <button className="text-everforest-fg hover:cursor-pointer hover:text-everforest-bg-green focus:outline-none">
+                {timerPaused ? (
+                  <FaPlay onClick={handleResumeTimer} />
+                ) : (
+                  <FaPause onClick={handlePauseTimer} />
+                )}
+              </button>
+              <button
+                className=" text-everforest-fg hover:cursor-pointer hover:text-everforest-bg-green"
+                onClick={handleNextImageClick}
+              >
+                <FaAnglesRight />
+              </button>
+            </div>
           </div>
-          <div className="absolute top-0 right-0">
-            <p>Current session type: ${sessionType}</p>
+          <div className="absolute bottom-0 right-2/12 p-1">
             <Timer
               timerSetting={timerSetting}
               timerPaused={timerPaused}

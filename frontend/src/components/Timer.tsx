@@ -14,6 +14,7 @@ function Timer({
   setTimeExpired: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [time, setTime] = useState<number>(timerSetting * 1000);
+  const halfTime = (timerSetting * 1000) / 2;
 
   useEffect(() => {
     const timer = () => {
@@ -49,8 +50,14 @@ function Timer({
   };
 
   return (
-    <div>
-      <p className="text-everforest-fg">Timer: {formatTime(time)}</p>
+    <div
+      className={
+        time === halfTime
+          ? "transition delay-150 duration-300 ease-in-out bg-everforest-orange rounded"
+          : ""
+      }
+    >
+      <p className="text-everforest-fg">{formatTime(time)}</p>
     </div>
   );
 }
