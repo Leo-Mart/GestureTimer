@@ -39,29 +39,40 @@ function SettingsPage() {
 
   return (
     <>
-      <form className="bg-[#1E2326] min-h-screen grid grid-cols-6">
-        <div className="col-start-2 col-span-4 border-3 border-teal-800">
-          <button
-            className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]"
-            onClick={handleSelectFoldersClick}
-          >
-            Open files
-          </button>
-          <div>
-            <p>
-              {imagePaths.length > 0
-                ? `Found ${imagePaths.length} images`
-                : null}
+      <form className="bg-everforest-bg-dim min-h-screen grid grid-cols-6 gap-4">
+        <div className="col-start-3 col-span-2">
+          <div className="mt-5 w-full h-1/2">
+            <h2 className="text-center text-2xl text-everforest-fg h-1/2 col-span-2">
+              GestureTimer
+            </h2>
+            <p className="text-center text-everforest-fg">
+              Setup your practice session below
             </p>
+          </div>
+
+          <div className="w-full h-1/2">
+            <button
+              className="col-span-2 w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua"
+              onClick={handleSelectFoldersClick}
+            >
+              Open files
+            </button>
+            <div className="mt-2">
+              <p className="text-everforest-fg">
+                {imagePaths.length > 0
+                  ? `Found ${imagePaths.length} images`
+                  : "No Images selected.."}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="col-start-2 col-span-4 border-3 border-green-700">
-          <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
+        <div className="col-start-3 col-span-2 h-1/5">
+          <h3 className="mb-5 text-lg font-medium text-everforest-fg text-center">
             Select session type
           </h3>
           <fieldset>
-            <ul className="grid w-full gap-0 grid-cols-2">
+            <ul className="grid w-full gap-1 grid-cols-2">
               <li>
                 <input
                   className="hidden peer"
@@ -75,7 +86,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="standard"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   Standard
                 </label>
@@ -93,7 +104,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="class"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-not-allowed peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   Class mode
                 </label>
@@ -102,12 +113,12 @@ function SettingsPage() {
           </fieldset>
         </div>
 
-        <div className="col-start-2 col-span-4 border-3 border-red-700">
-          <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
-            Choose time
+        <div className="col-start-3 col-span-2 h-1/5">
+          <h3 className="mb-5 text-lg font-medium text-everforest-fg text-center">
+            Display each image for..
           </h3>
           <fieldset>
-            <ul className="grid w-full gap-0 grid-cols-6">
+            <ul className="grid w-full gap-1 grid-cols-6">
               <li>
                 <input
                   type="radio"
@@ -121,7 +132,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-30"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   30 sec
                 </label>
@@ -139,7 +150,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-60"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   60 sec
                 </label>
@@ -158,9 +169,9 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-120"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
-                  2 minutes
+                  2 min
                 </label>
               </li>
 
@@ -177,9 +188,9 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-300"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
-                  5 minutes
+                  5 min
                 </label>
               </li>
 
@@ -196,9 +207,9 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-600"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
-                  10 minutes
+                  10 min
                 </label>
               </li>
 
@@ -215,9 +226,9 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-custom"
-                  className="inline-flex items-center justify-between w-full p-5 text-body bg-amber-100 border rounded cursor-pointer peer-checked:bg-red-100 hover:bg-green-100"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
-                  Custom time
+                  Custom...
                 </label>
                 {isChecked && (
                   <div>
@@ -249,7 +260,7 @@ function SettingsPage() {
           </fieldset>
         </div>
         {/* the start button */}
-        <div className="col-start-2 col-span-4">
+        <div className="col-start-3 col-span-2">
           <Link
             to="/drawing"
             state={{
@@ -259,10 +270,11 @@ function SettingsPage() {
             }}
           >
             <button
+              disabled={imagePaths.length === 0 ? true : false}
               type="button"
-              className="w-full h-1/2 bg-[#7FBBB3] hover:cursor-pointer hover:bg-[#D699B6]"
+              className="w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua disabled:bg-everforest-bg-dim"
             >
-              Start!
+              Start Drawing!
             </button>
           </Link>
         </div>
