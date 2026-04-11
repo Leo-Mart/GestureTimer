@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 function SettingsPage() {
   const [imagePaths, setImagePaths] = useState(Array<string>);
   const [isChecked, setIsChecked] = useState(false);
+  const [imageAmountChecked, setImageAmountChecked] = useState(false);
   const [sessionType, setSessionType] = useState("standard");
   const [timer, setTimer] = useState(30);
+  const [imageAmountChoice, setImageAmountChoice] = useState(0);
 
   const handleSessionChoice = (choice: string) => {
     if (isChecked) {
@@ -22,9 +24,35 @@ function SettingsPage() {
     setTimer(choice);
   };
 
+  const shuffleArray = (array: string[]): string[] => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  const handleImageAmountChoice = (choice: number) => {
+    if (imageAmountChecked) {
+      setImageAmountChecked(false);
+    }
+    setImageAmountChoice(choice);
+  };
+
   const handleCheckedCustomTimer = () => {
     setTimer(0);
     setIsChecked(true);
+  };
+
+  const handleCheckedCustomImageAmount = () => {
+    setImageAmountChoice(0);
+    setImageAmountChecked(true);
+  };
+
+  const handleImageAmountInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setImageAmountChoice(+e.target.value);
   };
 
   const handleCustomTimerInputChange = (
@@ -257,6 +285,73 @@ function SettingsPage() {
                 )}
               </li>
             </ul>
+            <div>
+              <h3 className="mb-5 text-lg font-medium text-everforest-fg text-center">
+                Number of Images in this session:
+              </h3>
+
+              <ul className="grid w-full gap-1 grid-cols-6">
+                <li>
+                  <input
+                    type="radio"
+                    id="all-images"
+                    name="images"
+                    value="all"
+                    className="hidden peer"
+                    checked={imageAmountChoice === 0}
+                    onChange={() => handleImageAmountChoice(0)}
+                    required
+                  />
+                  <label
+                    htmlFor="all-images"
+                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  >
+                    All loaded images
+                  </label>
+                </li>
+                <li className="col-span-2 grid grid-cols-2 gap-1">
+                  <input
+                    type="radio"
+                    id="custom-images"
+                    name="images"
+                    value="custom"
+                    className="hidden peer"
+                    checked={imageAmountChecked}
+                    onChange={() => handleCheckedCustomImageAmount()}
+                    required
+                  />
+                  <label
+                    htmlFor="custom-images"
+                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  >
+                    Custom
+                  </label>
+
+                  {imageAmountChecked && (
+                    <div>
+                      <label
+                        className="inline-flex items-center justify-between text-sm"
+                        htmlFor="custom-image-amount-input"
+                      >
+                        Number of images this session
+                        <input
+                          type="number"
+                          step={1}
+                          min={2}
+                          max={200}
+                          id="custom-image-amount-input"
+                          name="custom-image-amount-input"
+                          value={imageAmountChoice}
+                          onChange={handleImageAmountInputChange}
+                          placeholder="Image amount"
+                          className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
+                        />
+                      </label>
+                    </div>
+                  )}
+                </li>
+              </ul>
+            </div>
           </fieldset>
         </div>
         {/* the start button */}
@@ -264,7 +359,7 @@ function SettingsPage() {
           <Link
             to="/drawing"
             state={{
-              imagePaths: imagePaths,
+              imagePaths: shuffleArray(imagePaths),
               timerSetting: timer,
               sessionType: sessionType,
             }}
