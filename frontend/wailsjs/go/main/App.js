@@ -6,6 +6,10 @@ export function GetFilePaths() {
   return window['go']['main']['App']['GetFilePaths']();
 }
 
+export function OpenMessageDialog(arg1, arg2, arg3) {
+  return window['go']['main']['App']['OpenMessageDialog'](arg1, arg2, arg3);
+}
+
 export function ReadImageToBase64(arg1) {
   return window['go']['main']['App']['ReadImageToBase64'](arg1);
 }

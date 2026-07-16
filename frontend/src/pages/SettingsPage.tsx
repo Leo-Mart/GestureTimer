@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GetFilePaths } from "../../wailsjs/go/main/App.js";
+import { GetFilePaths, OpenMessageDialog } from "../../wailsjs/go/main/App.js";
 import { Link } from "react-router-dom";
 
 function SettingsPage() {
@@ -9,12 +9,27 @@ function SettingsPage() {
   const [sessionType, setSessionType] = useState("standard");
   const [timer, setTimer] = useState(30);
   const [imageAmountChoice, setImageAmountChoice] = useState(0);
+  const [shuffleChecked, setShuffleChecked] = useState(false);
 
   const handleSessionChoice = (choice: string) => {
     if (isChecked) {
       setIsChecked(false);
     }
     setSessionType(choice);
+  };
+
+  const handleSubmit = () => {
+    if (imageAmountChoice > imagePaths.length) {
+      OpenMessageDialog(
+        "Invalid image amount",
+        "You have more images in the queue than are loaded",
+        "info",
+      );
+    }
+  };
+
+  const handleShuffleCheckbox = () => {
+    setShuffleChecked(!shuffleChecked);
   };
 
   const handleTimerChoice = (choice: number) => {
@@ -52,7 +67,8 @@ function SettingsPage() {
   const handleImageAmountInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setImageAmountChoice(+e.target.value);
+    const amount = +e.target.value;
+    setImageAmountChoice(amount);
   };
 
   const handleCustomTimerInputChange = (
@@ -287,7 +303,7 @@ function SettingsPage() {
             </ul>
             <div>
               <h3 className="mb-5 text-lg font-medium text-everforest-fg text-center">
-                Number of Images in this session:
+                Image settings:
               </h3>
 
               <ul className="grid w-full gap-1 grid-cols-6">
@@ -327,28 +343,40 @@ function SettingsPage() {
                     Custom
                   </label>
 
-                  {imageAmountChecked && (
-                    <div>
-                      <label
-                        className="inline-flex items-center justify-between text-sm"
-                        htmlFor="custom-image-amount-input"
-                      >
-                        Number of images this session
-                        <input
-                          type="number"
-                          step={1}
-                          min={2}
-                          max={200}
-                          id="custom-image-amount-input"
-                          name="custom-image-amount-input"
-                          value={imageAmountChoice}
-                          onChange={handleImageAmountInputChange}
-                          placeholder="Image amount"
-                          className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
-                        />
-                      </label>
-                    </div>
-                  )}
+                  <label
+                    className="inline-flex items-center justify-between text-sm"
+                    htmlFor="custom-image-amount-input"
+                  >
+                    Number of images this session
+                    <input
+                      type="number"
+                      step={1}
+                      min={2}
+                      max={200}
+                      id="custom-image-amount-input"
+                      name="custom-image-amount-input"
+                      value={imageAmountChoice}
+                      onChange={handleImageAmountInputChange}
+                      placeholder="Image amount"
+                      className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
+                    />
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="checkbox"
+                    id="shuffle-option"
+                    name="shuffle-option"
+                    className="hidden peer"
+                    checked={shuffleChecked}
+                    onChange={() => handleShuffleCheckbox()}
+                  />
+                  <label
+                    htmlFor="shuffle-option"
+                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  >
+                    Shuffle order?
+                  </label>
                 </li>
               </ul>
             </div>
@@ -359,7 +387,9 @@ function SettingsPage() {
           <Link
             to="/drawing"
             state={{
-              imagePaths: shuffleArray(imagePaths),
+              imagePaths: shuffleChecked
+                ? shuffleArray(imagePaths)
+                : imagePaths,
               timerSetting: timer,
               sessionType: sessionType,
             }}
@@ -368,6 +398,7 @@ function SettingsPage() {
               disabled={imagePaths.length === 0 ? true : false}
               type="button"
               className="w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua disabled:bg-everforest-bg-dim"
+              onClick={handleSubmit}
             >
               Start Drawing!
             </button>

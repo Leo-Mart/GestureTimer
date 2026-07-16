@@ -25,6 +25,17 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
+func (a *App) OpenMessageDialog(title string, message string, dialogType string) {
+	_, err := runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+		Title:   title,
+		Message: message,
+		Type:    runtime.InfoDialog,
+	})
+	if err != nil {
+		runtime.LogError(a.ctx, err.Error())
+	}
+}
+
 func (a *App) GetFilePaths() []string {
 	imagePaths := []string{}
 	directory, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})
