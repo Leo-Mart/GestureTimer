@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { GetFilePaths, OpenMessageDialog } from "../../wailsjs/go/main/App.js";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SettingsPage() {
-  const [imagePaths, setImagePaths] = useState(Array<string>);
-  const [isChecked, setIsChecked] = useState(false);
-  const [imageAmountChecked, setImageAmountChecked] = useState(false);
-  const [sessionType, setSessionType] = useState("standard");
+  const nav = useNavigate();
+  const [imagePaths, setImagePaths] = useState<string[]>(Array<string>);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [sessionType, setSessionType] = useState<string>("standard");
   const [timer, setTimer] = useState(30);
-  const [imageAmountChoice, setImageAmountChoice] = useState(0);
-  const [shuffleChecked, setShuffleChecked] = useState(false);
+  const [allImagesCheck, setAlImagesChecked] = useState<boolean>(false);
+  const [customImageAmountChecked, setCustomImageAmountChecked] =
+    useState<boolean>(false);
+  const [imageAmountChoice, setImageAmountChoice] = useState<number>(0);
+  const [shuffleChecked, setShuffleChecked] = useState<boolean>(false);
 
   const handleSessionChoice = (choice: string) => {
     if (isChecked) {
@@ -25,11 +28,16 @@ function SettingsPage() {
         "You have more images in the queue than are loaded",
         "info",
       );
+      return;
     }
-  };
 
-  const handleShuffleCheckbox = () => {
-    setShuffleChecked(!shuffleChecked);
+    nav("/drawing", {
+      state: {
+        imagePaths: shuffleChecked ? shuffleArray(imagePaths) : imagePaths,
+        timerSetting: timer,
+        sessionType: sessionType,
+      },
+    });
   };
 
   const handleTimerChoice = (choice: number) => {
@@ -47,21 +55,9 @@ function SettingsPage() {
     return array;
   };
 
-  const handleImageAmountChoice = (choice: number) => {
-    if (imageAmountChecked) {
-      setImageAmountChecked(false);
-    }
-    setImageAmountChoice(choice);
-  };
-
   const handleCheckedCustomTimer = () => {
     setTimer(0);
     setIsChecked(true);
-  };
-
-  const handleCheckedCustomImageAmount = () => {
-    setImageAmountChoice(0);
-    setImageAmountChecked(true);
   };
 
   const handleImageAmountInputChange = (
@@ -83,7 +79,7 @@ function SettingsPage() {
 
   return (
     <>
-      <form className="bg-everforest-bg-dim min-h-screen grid grid-cols-6 gap-4">
+      <form className="bg-everforest-bg-dim min-h-screen grid grid-cols-6 gap-2">
         <div className="col-start-3 col-span-2">
           <div className="mt-5 w-full h-1/2">
             <h2 className="text-center text-2xl text-everforest-fg h-1/2 col-span-2">
@@ -96,7 +92,7 @@ function SettingsPage() {
 
           <div className="w-full h-1/2">
             <button
-              className="col-span-2 w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua"
+              className="col-span-2 w-full h-1/2 bg-everforest-bg-5 hover:cursor-pointer hover:bg-everforest-aqua"
               onClick={handleSelectFoldersClick}
             >
               Open files
@@ -130,12 +126,12 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="standard"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   Standard
                 </label>
               </li>
-              <li>
+              <li className="relative group">
                 <input
                   className="hidden peer"
                   type="radio"
@@ -144,14 +140,17 @@ function SettingsPage() {
                   value="class"
                   checked={sessionType === "class"}
                   onChange={() => handleSessionChoice("class")}
-                  required
+                  disabled
                 />
                 <label
                   htmlFor="class"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-not-allowed peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-not-allowed peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   Class mode
                 </label>
+                <div className="absolute bottom-full left-1/2 transform-translate-x-1/2 mb-2 w-max px-2 py-1 text-sm text-white bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100">
+                  Coming soon!
+                </div>
               </li>
             </ul>
           </fieldset>
@@ -176,7 +175,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-30"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   30 sec
                 </label>
@@ -194,7 +193,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-60"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   60 sec
                 </label>
@@ -213,7 +212,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-120"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   2 min
                 </label>
@@ -232,7 +231,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-300"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   5 min
                 </label>
@@ -251,7 +250,7 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-600"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
                   10 min
                 </label>
@@ -270,97 +269,98 @@ function SettingsPage() {
                 />
                 <label
                   htmlFor="timer-custom"
-                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                  className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                 >
-                  Custom...
+                  Custom
                 </label>
                 {isChecked && (
                   <div>
-                    <label htmlFor="custom-timer-input">
+                    <label
+                      className="text-everforest-fg"
+                      htmlFor="custom-timer-input"
+                    >
                       Enter time in seconds:
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         id="custom-timer-input"
                         name="custom-timer-input"
                         value={timer}
                         onChange={handleCustomTimerInputChange}
                         placeholder="Custom duration"
-                        className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
+                        pattern="[0-9]"
+                        className="block w-full px-3 py-2.5 bg-everforest-bg-visual text-everforest-fg text-sm focus:border-[#D699B6] shadow-xs"
                       />
-                    </label>
-                    <label htmlFor="interval" className="block mb-2.5">
-                      <select
-                        id="interval"
-                        className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg shadow-xs"
-                      >
-                        <option value="seconds">Seconds</option>
-                        <option value="minutes">Minutes</option>
-                      </select>
                     </label>
                   </div>
                 )}
               </li>
             </ul>
             <div>
-              <h3 className="mb-5 text-lg font-medium text-everforest-fg text-center">
+              <h3 className="mb-2 p-2 text-lg font-medium text-everforest-fg text-center">
                 Image settings:
               </h3>
 
-              <ul className="grid w-full gap-1 grid-cols-6">
+              <ul className="flex flex-col lg:flex-row justify-between w-full gap-1">
                 <li>
                   <input
-                    type="radio"
+                    type="checkbox"
                     id="all-images"
                     name="images"
                     value="all"
                     className="hidden peer"
-                    checked={imageAmountChoice === 0}
-                    onChange={() => handleImageAmountChoice(0)}
-                    required
+                    checked={allImagesCheck}
+                    onChange={() => {
+                      setCustomImageAmountChecked(false);
+                      setAlImagesChecked(true);
+                    }}
                   />
                   <label
                     htmlFor="all-images"
-                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                    className="inline-flex items-center justify-between bg-everforest-bg-5 p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                   >
-                    All loaded images
+                    All images
                   </label>
                 </li>
-                <li className="col-span-2 grid grid-cols-2 gap-1">
-                  <input
-                    type="radio"
-                    id="custom-images"
-                    name="images"
-                    value="custom"
-                    className="hidden peer"
-                    checked={imageAmountChecked}
-                    onChange={() => handleCheckedCustomImageAmount()}
-                    required
-                  />
-                  <label
-                    htmlFor="custom-images"
-                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
-                  >
-                    Custom
-                  </label>
-
-                  <label
-                    className="inline-flex items-center justify-between text-sm"
-                    htmlFor="custom-image-amount-input"
-                  >
-                    Number of images this session
+                <li className="flex grow gap-1">
+                  <div className="flex w-full gap-2">
                     <input
-                      type="number"
-                      step={1}
-                      min={2}
-                      max={200}
-                      id="custom-image-amount-input"
-                      name="custom-image-amount-input"
-                      value={imageAmountChoice}
-                      onChange={handleImageAmountInputChange}
-                      placeholder="Image amount"
-                      className="block w-full px-3 py-2.5 bg-[#4C3743] border border-[#3C4841] text-white text-sm rounded-b-lg focus:border-[#D699B6] shadow-xs"
+                      type="checkbox"
+                      id="custom-images"
+                      name="images"
+                      value="custom"
+                      className="hidden peer"
+                      checked={customImageAmountChecked}
+                      onClick={() => {
+                        setCustomImageAmountChecked(true);
+                        setAlImagesChecked(false);
+                      }}
                     />
-                  </label>
+                    <label
+                      htmlFor="custom-images"
+                      className="flex bg-everforest-bg-5 p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                    >
+                      Custom
+                    </label>
+
+                    <label
+                      className="flex w-1/2 text-sm"
+                      htmlFor="custom-image-amount-input"
+                    >
+                      <input
+                        type="number"
+                        step={1}
+                        min={2}
+                        max={200}
+                        id="custom-image-amount-input"
+                        name="custom-image-amount-input"
+                        value={imageAmountChoice}
+                        onChange={handleImageAmountInputChange}
+                        placeholder="Image amount"
+                        className="flex w-full px-3 py-2.5 bg-everforest-bg-visual text-everforest-fg text-sm focus:border-[#D699B6] shadow-xs"
+                      />
+                    </label>
+                  </div>
                 </li>
                 <li>
                   <input
@@ -369,13 +369,13 @@ function SettingsPage() {
                     name="shuffle-option"
                     className="hidden peer"
                     checked={shuffleChecked}
-                    onChange={() => handleShuffleCheckbox()}
+                    onChange={() => setShuffleChecked(!shuffleChecked)}
                   />
                   <label
                     htmlFor="shuffle-option"
-                    className="inline-flex items-center justify-between bg-everforest-bg-5 w-full p-5 rounded cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
+                    className="flex bg-everforest-bg-5 w-full p-2 cursor-pointer peer-checked:bg-everforest-green hover:bg-everforest-aqua"
                   >
-                    Shuffle order?
+                    Shuffle
                   </label>
                 </li>
               </ul>
@@ -384,25 +384,14 @@ function SettingsPage() {
         </div>
         {/* the start button */}
         <div className="col-start-3 col-span-2">
-          <Link
-            to="/drawing"
-            state={{
-              imagePaths: shuffleChecked
-                ? shuffleArray(imagePaths)
-                : imagePaths,
-              timerSetting: timer,
-              sessionType: sessionType,
-            }}
+          <button
+            disabled={imagePaths.length === 0 ? true : false}
+            type="button"
+            className="w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua disabled:bg-everforest-bg-dim"
+            onClick={handleSubmit}
           >
-            <button
-              disabled={imagePaths.length === 0 ? true : false}
-              type="button"
-              className="w-full h-1/2 bg-everforest-bg-5 rounded hover:cursor-pointer hover:bg-everforest-aqua disabled:bg-everforest-bg-dim"
-              onClick={handleSubmit}
-            >
-              Start Drawing!
-            </button>
-          </Link>
+            Start Drawing!
+          </button>
         </div>
       </form>
     </>

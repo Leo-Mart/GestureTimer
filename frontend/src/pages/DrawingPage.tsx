@@ -87,7 +87,7 @@ function DrawingPage() {
         <div className="relative min-h-screen flex justify-center">
           <img
             src={`data:image/jpg;base64, ${currentImage}`}
-            className="overflow-hidden max-h-screen"
+            className="overflow-hidden max-h-screen max-w-screen"
           />
           {/* Menu bar */}
           <div className="absolute bottom-0 w-full h-10 bg-everforest-bg-dim/35 flex justify-center p-1">
