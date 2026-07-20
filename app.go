@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
+	"image"
+	"image/png"
 	"os"
 	"path/filepath"
 
@@ -38,6 +41,32 @@ func (a *App) OpenMessageDialog(title string, message string, dialogType string)
 
 func (a *App) HandleQuit() {
 	runtime.Quit(a.ctx)
+}
+
+func (a *App) ConvertImageToGrayscale(imagePath string) string {
+	data, err := os.ReadFile(imagePath)
+	if err != nil {
+		runtime.LogError(a.ctx, "Error opening the image to convert")
+	}
+	reader := bytes.NewReader(data)
+	img, _, err := image.Decode(reader)
+	if err != nil {
+		runtime.LogError(a.ctx, "Error decoding image")
+	}
+
+	grayImg := image.NewGray(img.Bounds())
+	for y := img.Bounds().Min.Y; y < img.Bounds().Max.Y; y++ {
+		for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
+			grayImg.Set(x, y, img.At(x, y))
+		}
+	}
+
+	var buf bytes.Buffer
+	if err := png.Encode(&buf, grayImg); err != nil {
+		runtime.LogError(a.ctx, "Error reading images bytes")
+	}
+
+	return base64.StdEncoding.EncodeToString(buf.Bytes())
 }
 
 func (a *App) GetFilePaths() []string {

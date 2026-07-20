@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ReadImageToBase64, HandleQuit } from "../../wailsjs/go/main/App.js";
+import {
+  ReadImageToBase64,
+  HandleQuit,
+  ConvertImageToGrayscale,
+} from "../../wailsjs/go/main/App.js";
 import {
   FaAnglesRight,
   FaAnglesLeft,
   FaHouse,
   FaPlay,
   FaPause,
+  FaCircleHalfStroke,
 } from "react-icons/fa6";
 import Timer from "../components/Timer.tsx";
 import Modal from "../components/Modal.tsx";
@@ -21,12 +26,31 @@ function DrawingPage() {
   const currentImageRound = useRef(0);
 
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [imageBeforeConvertToGrayScale, setImageBeforeConvertToGrayScale] =
+    useState<string | null>();
   const currentImageIndex = useRef(1);
   const [timerPaused, setTimerPaused] = useState(false);
   const [timerExpired, setTimerExpired] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
 
   const [completeModalOpen, setCompleteModalOpen] = useState(false);
+
+  const handleConvertToGrayscale = () => {
+    setTimerPaused(true);
+    if (imageBeforeConvertToGrayScale) {
+      setCurrentImage(imageBeforeConvertToGrayScale);
+      return;
+    }
+    setImageBeforeConvertToGrayScale(currentImage);
+
+    ConvertImageToGrayscale(imagePaths[currentImageIndex.current]).then(
+      (data) => {
+        setCurrentImage(data);
+      },
+    );
+
+    setTimerPaused(false);
+  };
 
   const handleNextImageClick = () => {
     setResetTimer(true);
@@ -144,6 +168,13 @@ function DrawingPage() {
                 onClick={handleNextImageClick}
               >
                 <FaAnglesRight />
+              </button>
+
+              <button
+                className=" text-everforest-fg hover:cursor-pointer hover:text-everforest-bg-green"
+                onClick={handleConvertToGrayscale}
+              >
+                <FaCircleHalfStroke />
               </button>
             </div>
           </div>
