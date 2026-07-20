@@ -3,6 +3,8 @@
 
 export function ConvertImageToGrayscale(arg1:string):Promise<string>;
 
+export function FlipImageHorizontally(arg1:string):Promise<string>;
+
 export function GetFilePaths():Promise<Array<string>>;
 
 export function HandleQuit():Promise<void>;

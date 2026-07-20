@@ -6,6 +6,10 @@ export function ConvertImageToGrayscale(arg1) {
   return window['go']['main']['App']['ConvertImageToGrayscale'](arg1);
 }
 
+export function FlipImageHorizontally(arg1) {
+  return window['go']['main']['App']['FlipImageHorizontally'](arg1);
+}
+
 export function GetFilePaths() {
   return window['go']['main']['App']['GetFilePaths']();
 }
