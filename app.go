@@ -36,6 +36,10 @@ func (a *App) OpenMessageDialog(title string, message string, dialogType string)
 	}
 }
 
+func (a *App) HandleQuit() {
+	runtime.Quit(a.ctx)
+}
+
 func (a *App) GetFilePaths() []string {
 	imagePaths := []string{}
 	directory, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})

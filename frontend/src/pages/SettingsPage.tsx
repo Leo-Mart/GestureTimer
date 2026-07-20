@@ -36,6 +36,8 @@ function SettingsPage() {
         imagePaths: shuffleChecked ? shuffleArray(imagePaths) : imagePaths,
         timerSetting: timer,
         sessionType: sessionType,
+        customImageAmountChecked: customImageAmountChecked,
+        imageAmount: imageAmountChoice,
       },
     });
   };
@@ -331,7 +333,7 @@ function SettingsPage() {
                       value="custom"
                       className="hidden peer"
                       checked={customImageAmountChecked}
-                      onClick={() => {
+                      onChange={() => {
                         setCustomImageAmountChecked(true);
                         setAlImagesChecked(false);
                       }}

@@ -6,6 +6,10 @@ export function GetFilePaths() {
   return window['go']['main']['App']['GetFilePaths']();
 }
 
+export function HandleQuit() {
+  return window['go']['main']['App']['HandleQuit']();
+}
+
 export function OpenMessageDialog(arg1, arg2, arg3) {
   return window['go']['main']['App']['OpenMessageDialog'](arg1, arg2, arg3);
 }

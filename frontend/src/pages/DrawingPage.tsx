@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ReadImageToBase64 } from "../../wailsjs/go/main/App.js";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ReadImageToBase64, HandleQuit } from "../../wailsjs/go/main/App.js";
 import {
   FaAnglesRight,
   FaAnglesLeft,
@@ -9,16 +9,24 @@ import {
   FaPause,
 } from "react-icons/fa6";
 import Timer from "../components/Timer.tsx";
+import Modal from "../components/Modal.tsx";
 
 function DrawingPage() {
   const location = useLocation();
-  const { imagePaths, timerSetting } = location.state;
+  const nav = useNavigate();
+  const { imagePaths, timerSetting, imageAmount, customImageAmountChecked } =
+    location.state;
+
+  const maxImages = imageAmount === 0 ? 0 : imageAmount;
+  const currentImageRound = useRef(0);
 
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const currentImageIndex = useRef(0);
+  const currentImageIndex = useRef(1);
   const [timerPaused, setTimerPaused] = useState(false);
   const [timerExpired, setTimerExpired] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
+
+  const [completeModalOpen, setCompleteModalOpen] = useState(false);
 
   const handleNextImageClick = () => {
     setResetTimer(true);
@@ -72,14 +80,34 @@ function DrawingPage() {
         newIndex = 0;
       }
 
+      if (customImageAmountChecked) {
+        currentImageRound.current++;
+
+        if (currentImageRound.current >= maxImages) {
+          setTimerPaused(true);
+          setCompleteModalOpen(true);
+          return;
+        }
+      }
+
       currentImageIndex.current = newIndex;
+
       setTimerExpired(false);
     }
-
     ReadImageToBase64(imagePaths[currentImageIndex.current]).then((data) => {
       setCurrentImage(data);
     });
-  }, [imagePaths, timerExpired]);
+  }, [imagePaths, timerExpired, maxImages, customImageAmountChecked]);
+
+  const handleCompletionChoice = (choice: string) => {
+    setCompleteModalOpen(false);
+
+    if (choice === "settings") {
+      nav("/");
+    } else {
+      HandleQuit();
+    }
+  };
 
   return (
     <>
@@ -124,12 +152,17 @@ function DrawingPage() {
               timerSetting={timerSetting}
               timerPaused={timerPaused}
               resetTimer={resetTimer}
+              remainingImages={maxImages - currentImageRound.current}
               setTimeExpired={setTimerExpired}
               setResetTimer={setResetTimer}
             />
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={completeModalOpen}
+        handleSelection={handleCompletionChoice}
+      />
     </>
   );
 }

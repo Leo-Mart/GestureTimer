@@ -4,12 +4,14 @@ function Timer({
   timerSetting,
   timerPaused,
   resetTimer,
+  remainingImages,
   setResetTimer,
   setTimeExpired,
 }: {
   timerSetting: number;
   timerPaused: boolean;
   resetTimer: boolean;
+  remainingImages: number;
   setResetTimer: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeExpired: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -57,7 +59,16 @@ function Timer({
           : ""
       }
     >
-      <p className="text-everforest-fg">{formatTime(time)}</p>
+      <div className="flex">
+        {remainingImages === 0 ? (
+          ""
+        ) : (
+          <p className="text-everforest-fg p-2">
+            {remainingImages} images left.
+          </p>
+        )}
+        <p className="p-2 text-everforest-fg">{formatTime(time)}</p>
+      </div>
     </div>
   );
 }
