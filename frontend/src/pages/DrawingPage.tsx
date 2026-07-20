@@ -182,8 +182,20 @@ function DrawingPage() {
     }
   };
 
+  const handleQuitClick = () => {
+    HandleQuit();
+  };
+
   return (
     <>
+      <div className="z-60 text-everforest-fg absolute top-0.5 right-0.5">
+        <button
+          className="p-2 hover:cursor-pointer hover:bg-everforest-aqua hover:text-everforest-bg-0"
+          onClick={handleQuitClick}
+        >
+          X
+        </button>
+      </div>
       <div className="bg-everforest-bg-dim">
         <div className="relative min-h-screen flex justify-center">
           <img

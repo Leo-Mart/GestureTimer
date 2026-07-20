@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { GetFilePaths, OpenMessageDialog } from "../../wailsjs/go/main/App.js";
+import {
+  GetFilePaths,
+  HandleQuit,
+  OpenMessageDialog,
+} from "../../wailsjs/go/main/App.js";
 import { useNavigate } from "react-router-dom";
 
 function SettingsPage() {
@@ -79,8 +83,20 @@ function SettingsPage() {
     GetFilePaths().then((paths) => setImagePaths(paths));
   };
 
+  const handleQuitClick = () => {
+    HandleQuit();
+  };
+
   return (
     <>
+      <div className=" text-everforest-fg absolute top-0.5 right-0.5">
+        <button
+          className="p-2 hover:cursor-pointer hover:bg-everforest-aqua hover:text-everforest-bg-0"
+          onClick={handleQuitClick}
+        >
+          X
+        </button>
+      </div>
       <form className="bg-everforest-bg-dim min-h-screen grid grid-cols-6 gap-2">
         <div className="col-start-3 col-span-2">
           <div className="mt-5 w-full h-1/2">
