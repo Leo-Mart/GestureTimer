@@ -59,8 +59,8 @@ and run the app
 ```
 
 ## Usage
+https://github.com/user-attachments/assets/bcc73fae-9401-43b9-8c05-91a3b996fce2
 
-![](./docs/demo.mp4)
 Image in demo is from Max Max Fury Road promotional material.
 
 Currently the app accepts .png and .jpegs. Use the various buttons on the drawing page to jump to previous/next image, pause/start the timer, convert the image to grayscale and flip the image horizontally.
